@@ -1,0 +1,20 @@
+# Maven build çıktıları
+target/
+
+# Test raporları ve loglar
+test-output/
+
+# IDE dosyaları
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+.settings/
+
+# OS dosyaları
+.DS_Store
+Thumbs.db
+
+# Hassas config (gerçek credentials varsa)
+# src/test/resources/config.properties

@@ -1,0 +1,82 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<!--
+    TestNG Suite Konfigürasyonu
+    ──────────────────────────────────────────────────────────
+    Tümünü çalıştır    : mvn test
+    Sadece onboarding  : mvn test -Dtest=OnboardingTest
+    Belirli grup       : mvn test -Dgroups=smoke
+    ──────────────────────────────────────────────────────────
+-->
+<suite name="Appium Android Test Suite" verbose="1" thread-count="1" parallel="none">
+
+    <parameter name="platform" value="Android"/>
+
+    <!-- ── Onboarding Tests (tek session — sıralı çalışır) ──────────────── -->
+    <!--
+        ÖNEMLİ: Bu suite'in çalışması için:
+          1. Appium server açık olmalı  → appium &#45;&#45;port 4723
+          2. Android cihaz USB ile bağlı ve USB Debugging açık olmalı
+          3. config.properties içindeki app.package, app.activity,
+             device.name ve platform.version değerleri doldurulmuş olmalı
+          4. Page locator'larındaki TODO'lar Appium Inspector ile doldurulmuş olmalı
+    -->
+    <test name="Onboarding Tests" preserve-order="true" group-by-instances="true">
+        <classes>
+            <class name="com.mobileautomation.tests.OnboardingTest">
+                <methods>
+                    <!-- Sıra priority anotasyonu ile garanti altına alınmıştır.
+                         preserve-order="true" + dependsOnMethods zinciri ekstra güvence sağlar. -->
+                    <include name="test01_appLaunchesOnGetStartedScreen"/>
+                    <include name="test02_openTermsOfUseScreen"/>
+                    <include name="test03_returnToGetStartedFromTerms"/>
+                    <include name="test04_openPrivacyPolicyScreen"/>
+                    <include name="test05_returnToGetStartedFromPrivacyPolicy"/>
+                    <include name="test06_getStartedButtonNavigatesToOnboarding"/>
+                    <include name="test07_completeAllOnboardingSteps"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <!-- ── Login Tests ───────────────────────────────────────────────────── -->
+    <test name="Login Tests" group-by-instances="true">
+        <groups>
+            <define name="smoke">
+                <include name="smoke"/>
+            </define>
+            <define name="regression">
+                <include name="regression"/>
+            </define>
+            <run>
+                <include name="smoke"/>
+                <include name="regression"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.mobileautomation.tests.LoginTest">
+                <methods>
+                    <include name="testSuccessfulLogin"/>
+                    <include name="testLoginWithWrongPassword"/>
+                    <include name="testLoginWithEmptyCredentials"/>
+                    <include name="testLoginWithInvalidUsername"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <!-- ── Home Tests ────────────────────────────────────────────────────── -->
+    <test name="Home Tests" group-by-instances="true">
+        <classes>
+            <class name="com.mobileautomation.tests.HomeTest">
+                <methods>
+                    <include name="testHomePageLoadsAfterLogin"/>
+                    <include name="testWelcomeTextIsVisible"/>
+                    <include name="testSearchButtonIsClickable"/>
+                    <include name="testLogoutNavigatesToLoginPage"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>
